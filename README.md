@@ -11,6 +11,9 @@ Additionally, it integrates seamlessly with the [Automatic Water Pump for S1 pro
 automatic control of a water pump based on the sensor's data. This integration enhances the system's 
 efficiency by automating water management processes.
 
+Please note that this is an incomplete ongoing project. I am moving it from a working project on the development board to 
+certified production chips and new SMD components, for easy assembly and production.
+
 The project is open source and open hardware, licensed under GPLv3. All hardware, software, and
 3D printable components were designed from scratch by me, **Raul Rodriguez Guardo**, and are released 
 under the GPLv3 license, allowing for free use and modification.
