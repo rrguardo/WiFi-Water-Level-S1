@@ -13,6 +13,8 @@
  *
  * You should have received a copy of the GNU General Public License
  * along with this program. If not, see <https://www.gnu.org/licenses/>.
+ *
+ * TODO: Specified libs versions and compatible/tested microcontroller.
  */
 
 #include <Arduino.h>
@@ -33,24 +35,24 @@
 
                                                                                                                                                                                                                                                    
 
-// #define DEBUG  // Comentar esta línea para desactivar las impresiones seriales
+// #define DEBUG  // Comment this line to disable serial prints
 
 
 // DEV MODE allow app update remote
 const bool DEV_MODE = true;
 const char* firmwareUrl = "https://waterlevel.pro/static/fw";
-int FIRMW_VER = 15;                                               
+int FIRMW_VER = 17;
 
 int32_t rssi = 0;
 
 
-const int pinVoltageInput = 2;  // Utilizando ADC1_CH2 en GPIO2
+const int pinVoltageInput = 2;  // Using ADC1_CH2 en GPIO2
 
 // Define the pins for the HCSR04 sensor
 const int trigPin = 20;
 const int echoPin = 21;
 
-// Pin del botón (FLASH button)
+// Button Pin (FLASH button)
 const int pinBoton = 10;
 
 enum ConfigStatus {
@@ -78,7 +80,7 @@ unsigned long tiempoBateria = 0;
 // Waterlevel.pro offers free server services with a sensor info update time of up to 120 seconds.
 const char* host_url = "https://api.waterlevel.pro/update";
 
-char* api_key =  "----";  //  PRIVATE KEY HERE // "-" none-null-api-key
+char* api_key =  "-";  //  PRIVATE KEY HERE // "-" none-null-api-key
 // generate new key in developer zone at https://waterlevel.pro/settings   https://waterlevel.pro/add_sensor
 
 const char* WIFI_NAME = "WaterLevelProSetup";
@@ -109,7 +111,7 @@ void setup() {
   tiempoBateria = 0;
 
 
-  // Iniciar la memoria flash
+  // Init memory flash
   esp_err_t err = nvs_flash_init();
 
   if (err == ESP_ERR_NVS_NO_FREE_PAGES || err == ESP_ERR_NVS_NEW_VERSION_FOUND) {
@@ -216,7 +218,7 @@ void restart_after_wakeup()
 
 float UnderVoltageProt(bool is_setup, int tryNum){
   const float referenciaADC = 8.39;  // Ajustar según la referencia del ADC
-  float LowVoltage = 3.31; // This will trigger protection
+  float LowVoltage = 3.5; // This will trigger protection
 
   // Realizar una medición ADC
   int lectura_adc = analogRead(pinVoltageInput);
@@ -361,7 +363,8 @@ void SleepSave(int seconds){
   
   esp_wifi_stop();
 
-  ESP.deepSleep(seconds*1000000);
+  //ESP.deepSleep(seconds*1000000);
+  esp_deep_sleep(seconds*1000000);
   //system_deep_sleep_instant();
   // chip will not perform RF calibration after waking up 
   // 1 -calib  ## 2 - no-calib
