@@ -41,7 +41,7 @@
 // DEV MODE allow app update remote
 const bool DEV_MODE = true;
 const char* firmwareUrl = "https://waterlevel.pro/static/fw";
-int FIRMW_VER = 17;
+int FIRMW_VER = 18;
 
 int32_t rssi = 0;
 
@@ -99,7 +99,7 @@ void setup() {
   adcAttachPin(pinVoltageInput);  // Adjuntar el pin al canal ADC
   UnderVoltageProt(true, 0); //check undervoltage
 
-  // Serial.begin(115200);
+  Serial.begin(115200);
 
   #ifdef DEBUG
     Serial.println("Setup Started!");
