@@ -96,6 +96,10 @@ For more details about important 3d printing recommendations
 
 ![Bottom View](images/CasePreview2.jpeg)
 
+### No 3D Printer? No Problem! Easily Print Parts for Your WiFi Water Level Sensor S1
+
+With [Craftcloud3D](https://craftcloud3d.com), you can print the entire set for around **$37**, including delivery to the US (as of October 2024). Choose durable materials like **PETG** for outdoor use, and set **infill at 60%** or higher for added strength. Just upload the 3D files and get everything printed and shipped to you!
+
 ---
 ## Mount options samples
 ### Pipe mount
