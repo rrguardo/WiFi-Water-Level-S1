@@ -20,11 +20,12 @@
 // IDE and Board
 // Arduino Framework version: 2.3.2
 // Arduino Board Module: ESP32C3 Dev Module
+// Board: ESP32-C3-MINI-1U-H4 
 // Board Manager URL: https://arduino.esp8266.com/stable/package_esp8266com_index.json 
 
 // Libraries used:
 // WiFiManager by tzapu version: 2.0.16-rc.2 
-// Board: ESP32-C3-MINI-1U-H4 
+
 
 #include <Arduino.h>
 
