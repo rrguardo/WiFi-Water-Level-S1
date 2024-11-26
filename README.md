@@ -49,7 +49,7 @@ under the GPLv3 license, allowing for free use and modification.
 
 ## Microcontroller Software
 
-[ArduinoIDE INO File](WiFiWaterLevelS1.ino)
+[ArduinoIDE INO File](WiFiWaterLevelS1/WiFiWaterLevelS1.ino)
 
 This devide use ESP32-C3 microcontroller can use Arduino IDE to flash/upload microcontroller code, using **ESP32C3 Dev Module** as board.
 

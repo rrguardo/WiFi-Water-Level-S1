@@ -18,11 +18,11 @@
 // IDE and Board
 // Arduino Framework version: 2.3.2
 // Arduino Board Module: ESP32C3 Dev Module
-// Board: ESP32-C3-MINI-1U-H4 
-// Board Manager URL: https://arduino.esp8266.com/stable/package_esp8266com_index.json 
+// Board: ESP32-C3-MINI-1U-H4
+// Board Manager URL: https://arduino.esp8266.com/stable/package_esp8266com_index.json
 
 // Libraries used:
-// WiFiManager by tzapu version: 2.0.16-rc.2 
+// WiFiManager by tzapu version: 2.0.16-rc.2
 
 
 #include <Arduino.h>
@@ -41,7 +41,7 @@
 
 #include "esp_wifi.h"
 
-                                                                                                                                                                                                                                                   
+
 
 // #define DEBUG  // Comment this line to disable serial prints
 
@@ -131,7 +131,7 @@ void setup() {
   ESP_ERROR_CHECK( err );
   err = nvs_open("storage", NVS_READWRITE, &my_nvs_handle);
   if (err != ESP_OK) {
-        
+
           #ifdef DEBUG
             Serial.println("Error opening nvs handler");
           #else
@@ -154,7 +154,7 @@ void setup() {
   if(CurrentStatus == WIFI_SETUP){
     SetupResetWifi();
   }
-  
+
   // Set the trigger pin as an output and the echo pin as an input
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
@@ -163,7 +163,7 @@ void setup() {
   pinMode(pinBoton, INPUT_PULLUP);
   // Asociamos la función botonPresionado() al pin del botón
   attachInterrupt(pinBoton, botonPresionado, FALLING);
-  
+
 }
 
 int myStrlen(const char* str) {
@@ -184,7 +184,7 @@ void load_private_key(){
     char* tmp_key = (char*)malloc(required_size);
     nvs_get_str(my_nvs_handle, "PrivateKey", tmp_key, &required_size);
     api_key = tmp_key;
-    
+
     #ifdef DEBUG
       Serial.print("Private Key loaded from memory: ");
       Serial.println(api_key);
@@ -214,7 +214,7 @@ void load_private_key(){
     esp_system_abort("restart_after_wakeup");
   }
 
-  
+
 }
 
 void restart_after_wakeup()
@@ -245,14 +245,14 @@ float UnderVoltageProt(bool is_setup, int tryNum){
 
   // Imprimir el resultado
   #ifdef DEBUG
-  
+
   Serial.print("Valor ADC: ");
   Serial.print(lectura_adc);
-  
+
   Serial.print(", Voltaje: ");
   Serial.print(voltaje, 2);  // Mostrar solo dos decimales
   Serial.println(" V");
-  
+
   #else
        delay(10);
     #endif
@@ -284,23 +284,23 @@ void loop() {
   if(tiempoArranque > 30*60*1000){
     esp_system_abort("restart_after_wakeup");
   }
-  
+
   float LastVoltage = UnderVoltageProt(false, 0); //check undervoltage
 
   last_distance = getDistance();
 
   ConnectWifi();
   HttpSendInfo(last_distance, LastVoltage);
-  
+
   wm.disconnect();
   WiFi.mode(WIFI_OFF);
-  
+
   #ifdef DEBUG
     Serial.println("sleeping to save energy");
   #else
        delay(10);
     #endif
-  
+
   SleepSave(WIFI_POOL_TIME);
   delay(100);
 
@@ -357,7 +357,7 @@ ICACHE_RAM_ATTR void botonPresionado() {
 
 
 void SleepSave(int seconds){
-  // IMPORTANT: Connect D0(GPIO-16) to RST after programing. This will reset the device after waking up (easy wifi/device restart) 
+  // IMPORTANT: Connect D0(GPIO-16) to RST after programing. This will reset the device after waking up (easy wifi/device restart)
   #ifdef DEBUG
     Serial.println("Will sleep now");
   #else
@@ -368,16 +368,16 @@ void SleepSave(int seconds){
 
   WiFi.disconnect(true);
   adc_power_off();
-  
+
   esp_wifi_stop();
 
   //ESP.deepSleep(seconds*1000000);
   esp_deep_sleep(seconds*1000000);
   //system_deep_sleep_instant();
-  // chip will not perform RF calibration after waking up 
+  // chip will not perform RF calibration after waking up
   // 1 -calib  ## 2 - no-calib
   //system_deep_sleep_set_option(2);
-  
+
 }
 
 
@@ -410,13 +410,13 @@ bool HttpSendInfo(int distance, float LastVoltage){
     #else
        delay(10);
     #endif
-    
+
     long timeout = 15000;
 
     HTTPClient https;
     https.setTimeout(timeout);
     https.setConnectTimeout(timeout);
-    
+
     #ifdef DEBUG
       Serial.print("[HTTPS] begin...\n");
     #else
@@ -547,10 +547,10 @@ bool SetupResetWifi(){
   WiFi.mode(WIFI_AP); // explicitly set mode
   //WiFi.setTxPower(WIFI_POWER_8_5dBm);
   delay(250);
-    
+
   //reset settings
   // wm.resetSettings();
-  
+
   wm.setCaptivePortalEnable(true);
 
   std::vector<const char *> menu = {"wifi","restart","exit"};
@@ -604,7 +604,7 @@ bool ConnectWifi(){
 
     std::vector<const char *> menu = {"wifi","restart","exit"};
     wm.setMenu(menu);
-  
+
     // set configportal timeout 10 sec
     wm.setConfigPortalTimeout(7); // !IMPORTANT 4 BATTERY
     // TODO, remove preload + Setup Connections
@@ -644,7 +644,7 @@ void load_settings(){
        delay(10);
     #endif
 
-  
+
   if(status >= 0 && status <= 4){
     CurrentStatus = (ConfigStatus)status;
   }else{
@@ -679,7 +679,7 @@ void updateFirmware(int new_fw_vers) {
 
   char urlout[255];
   sprintf(urlout, "%s/sensor%d.bin", firmwareUrl, new_fw_vers);
-  
+
   if (http.begin(urlout)) {
     int httpResponseCode = http.GET();
 
