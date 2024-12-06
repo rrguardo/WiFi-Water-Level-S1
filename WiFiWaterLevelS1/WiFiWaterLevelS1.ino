@@ -22,7 +22,7 @@
 // Board Manager URL: https://arduino.esp8266.com/stable/package_esp8266com_index.json
 
 // Libraries used:
-// WiFiManager by tzapu version: 2.0.16-rc.2
+// WiFiManager by tzapu version: 2.0.17
 
 
 #include <Arduino.h>
@@ -88,13 +88,21 @@ unsigned long tiempoBateria = 0;
 // Waterlevel.pro offers free server services with a sensor info update time of up to 120 seconds.
 const char* host_url = "https://api.waterlevel.pro/update";
 
+
+const char* host_link_url = "https://api.waterlevel.pro/link";
+
 char* api_key =  "-";  //  PRIVATE KEY HERE // "-" none-null-api-key
 // generate new key in developer zone at https://waterlevel.pro/settings   https://waterlevel.pro/add_sensor
 
 const char* WIFI_NAME = "WaterLevelProSetup";
 const char* WIFI_PASSW = "1122334455";
+char* email = "-"; // Variable to store email
 
 WiFiManager wm;
+// Set custom email parameter
+WiFiManagerParameter custom_email("email", "Enter Email", email, 40);
+
+
 nvs_handle_t my_nvs_handle;
 
 void setup() {
@@ -131,13 +139,12 @@ void setup() {
   ESP_ERROR_CHECK( err );
   err = nvs_open("storage", NVS_READWRITE, &my_nvs_handle);
   if (err != ESP_OK) {
-
-          #ifdef DEBUG
-            Serial.println("Error opening nvs handler");
-          #else
-            delay(10);
-          #endif
-
+    
+    #ifdef DEBUG
+      Serial.println("Error opening nvs handler");
+    #else
+      delay(10);
+    #endif
 
   } else {
     #ifdef DEBUG
@@ -147,9 +154,16 @@ void setup() {
     #endif
   }
 
-  load_private_key();
+  //load_email();
+
+ 
+  // Add parameter to WiFiManager
+  wm.addParameter(&custom_email);
+  // Set config save callback
+  wm.setSaveConfigCallback(saveConfigCallback);
 
   load_settings();
+  load_private_key();
 
   if(CurrentStatus == WIFI_SETUP){
     SetupResetWifi();
@@ -163,6 +177,32 @@ void setup() {
   pinMode(pinBoton, INPUT_PULLUP);
   // Asociamos la función botonPresionado() al pin del botón
   attachInterrupt(pinBoton, botonPresionado, FALLING);
+
+}
+
+void saveConfigCallback() {
+  Serial.println("Enter saveConfigCallback");
+  // Placeholder for additional code to handle saving to persistent storage, if needed
+
+  // Guardar el email en EEPROM
+  const char *newEmail = custom_email.getValue();
+  strncpy(email, newEmail, sizeof(email) - 1); // Copiar el nuevo valor
+  email[sizeof(email) - 1] = '\0'; // Asegurar que termina con '\0'
+
+
+  if(email != "-" && myStrlen(email) >= 7 ){
+
+    #ifdef DEBUG
+      Serial.print("Saving email to storage: ");
+      Serial.println(email);
+    #else
+       delay(10);
+    #endif
+  }else{
+    Serial.print("Invalid email: ");
+    Serial.println(email);
+    email = "-";
+  }
 
 }
 
@@ -204,7 +244,7 @@ void load_private_key(){
     #endif
   }
 
-  if(myStrlen(api_key) < 10){
+  if(myStrlen(api_key) < 10 && CurrentStatus == WIFI_SETUP){
     #ifdef DEBUG
       Serial.print("ERROR: Short API KEY: ");
       Serial.println(api_key);
@@ -214,6 +254,26 @@ void load_private_key(){
     esp_system_abort("restart_after_wakeup");
   }
 
+
+}
+
+void load_email(){
+
+  size_t required_size;
+  nvs_get_str(my_nvs_handle, "Email", NULL, &required_size);
+  if (required_size != 0) {
+    char* tmp_email = (char*)malloc(required_size);
+    nvs_get_str(my_nvs_handle, "Email", tmp_email, &required_size);
+    email = tmp_email;
+
+    #ifdef DEBUG
+      Serial.print("Email loaded from memory: ");
+      Serial.println(email);
+    #else
+       delay(10);
+    #endif
+
+  }
 
 }
 
@@ -400,6 +460,149 @@ void splitString(const String &dataString, int *resultArray, int arraySize) {
 }
 
 
+String urlEncode(String str) {
+  String encoded = "";
+  char c;
+  char hex[4]; // Para almacenar el formato %XX
+
+  for (size_t i = 0; i < str.length(); i++) {
+    c = str.charAt(i);
+
+    // Codificar caracteres especiales según el estándar
+    if (isalnum(c) || c == '-' || c == '_' || c == '.' || c == '~') {
+      encoded += c; // Dejar caracteres seguros sin cambios
+    } else {
+      sprintf(hex, "%%%02X", c); // Convertir a %XX
+      encoded += hex;
+    }
+  }
+
+  return encoded;
+}
+
+
+bool HttpRegDevice(){
+
+  // Check for successful connection
+  if (WiFi.status() == WL_CONNECTED) {
+    #ifdef DEBUG
+      Serial.println("Connected to WiFi");
+    #else
+       delay(10);
+    #endif
+
+    long timeout = 15000;
+
+    HTTPClient https;
+    https.setTimeout(timeout);
+    https.setConnectTimeout(timeout);
+
+    #ifdef DEBUG
+      Serial.print("[HTTPS] begin...\n");
+    #else
+       delay(10);
+    #endif
+
+
+    char urlout[255];
+
+    String email_encoded = urlEncode(email);
+    // we are going to start here
+    strcpy(urlout, host_link_url);
+    strcat(urlout, "?key=");
+    strcat(urlout, api_key);
+    strcat(urlout, "&email=");
+    strcat(urlout, email_encoded.c_str());
+
+
+
+    if (https.begin(urlout)) {  // HTTPS
+
+      //https.setVerify .setVerify(true);
+      https.setReuse(false);
+
+      // Add a custom HTTP header (replace "Your-Header" and "Header-Value" with your actual header and value)
+      https.addHeader("FW-Version", (String)FIRMW_VER);
+      https.addHeader("RSSI", (String)rssi);
+
+      https.setTimeout(timeout);
+
+      // prepare to read response headers
+      const char *headerKeys[] = {"fw-version", "wpl-key"}; // Agrega todas las claves de los encabezados que deseas recopilar
+      const size_t headerKeysCount = sizeof(headerKeys) / sizeof(headerKeys[0]);
+      // Recopila las cabeceras HTTP especificadas
+      https.collectHeaders(headerKeys, headerKeysCount);
+
+      // start connection and send HTTP header
+      int httpCode = https.GET();
+
+      // httpCode will be negative on error
+      if (httpCode > 0) {
+        // HTTP header has been send and Server response header has been handled
+
+        #ifdef DEBUG
+          Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
+        #else
+          delay(10);
+        #endif
+
+        // file found at server
+        if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
+
+          String payload = https.getString();
+
+          #ifdef DEBUG
+            Serial.print("response payload: ");
+            Serial.println(payload);
+          #else
+            delay(10);
+          #endif
+
+          if(payload == "OK"){
+
+            String latest_relay_fw = https.header("fw-version");
+            String wlp_key = https.header("wpl-key");
+
+            if(wlp_key != "-" && myStrlen(wlp_key.c_str()) >= 7 and api_key == "-")
+            {
+                api_key = (char*)wlp_key.c_str();
+            }
+
+          }
+
+          https.end();
+          return true;
+
+        }
+      } else {
+        #ifdef DEBUG
+          Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
+        #else
+          delay(10);
+        #endif
+        https.end();
+        return false;
+      }
+
+    } else {
+      #ifdef DEBUG
+        Serial.printf("[HTTPS] Unable to connect\n");
+      #else
+       delay(10);
+    #endif
+      return false;
+    }
+
+  } else {
+    #ifdef DEBUG
+      Serial.println("Failed to connect to WiFi");
+    #else
+       delay(10);
+    #endif
+  }
+  return false;
+}
+
 
 bool HttpSendInfo(int distance, float LastVoltage){
 
@@ -577,8 +780,12 @@ bool SetupResetWifi(){
     Serial.println("connected success!");
   #else
        delay(10);
-    #endif
+  #endif
 
+  if(email != "-"){
+    HttpRegDevice();
+  }
+  
   nvs_set_i32(my_nvs_handle, "0-status", (int32_t)WIFI);
   nvs_commit(my_nvs_handle);
   CurrentStatus = WIFI;
