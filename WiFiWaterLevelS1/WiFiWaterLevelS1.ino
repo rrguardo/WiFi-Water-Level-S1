@@ -16,7 +16,7 @@
  */
 
 // IDE and Board
-// Arduino Framework version: 2.3.2
+// Arduino Framework version: 2.3.3
 // Arduino Board Module: ESP32C3 Dev Module
 // Board: ESP32-C3-MINI-1U-H4
 // Board Manager URL: https://arduino.esp8266.com/stable/package_esp8266com_index.json
@@ -43,7 +43,9 @@
 
 
 
-// #define DEBUG  // Comment this line to disable serial prints
+#define DEBUG  // Comment this line to disable serial prints
+
+#define EMAIL_MAX_LENGTH 128  // Nuevo tamaño para el email
 
 
 // DEV MODE allow app update remote
@@ -91,16 +93,17 @@ const char* host_url = "https://api.waterlevel.pro/update";
 
 const char* host_link_url = "https://api.waterlevel.pro/link";
 
-char* api_key =  "-";  //  PRIVATE KEY HERE // "-" none-null-api-key
+char api_key[128] = "-";  //  PRIVATE KEY HERE // "-" none-null-api-key
 // generate new key in developer zone at https://waterlevel.pro/settings   https://waterlevel.pro/add_sensor
+// use value "-" for automatic api key setup
 
 const char* WIFI_NAME = "WaterLevelProSetup";
 const char* WIFI_PASSW = "1122334455";
-char* email = "-"; // Variable to store email
-
+char email[EMAIL_MAX_LENGTH] = "-";  // Variable to store email
+ 
 WiFiManager wm;
 // Set custom email parameter
-WiFiManagerParameter custom_email("email", "Enter Email", email, 40);
+WiFiManagerParameter custom_email("email", "Enter Email", email, EMAIL_MAX_LENGTH, "type='email' required placeholder='example@example.com'");
 
 
 nvs_handle_t my_nvs_handle;
@@ -162,8 +165,9 @@ void setup() {
   // Set config save callback
   wm.setSaveConfigCallback(saveConfigCallback);
 
-  load_settings();
   load_private_key();
+  load_settings();
+  
 
   if(CurrentStatus == WIFI_SETUP){
     SetupResetWifi();
@@ -190,10 +194,10 @@ void saveConfigCallback() {
   email[sizeof(email) - 1] = '\0'; // Asegurar que termina con '\0'
 
 
-  if(email != "-" && myStrlen(email) >= 7 ){
+  if(myStrlen(email) >= 7 ){
 
     #ifdef DEBUG
-      Serial.print("Saving email to storage: ");
+      Serial.print("Email to linked: ");
       Serial.println(email);
     #else
        delay(10);
@@ -201,7 +205,7 @@ void saveConfigCallback() {
   }else{
     Serial.print("Invalid email: ");
     Serial.println(email);
-    email = "-";
+    strcpy(email, "-");
   }
 
 }
@@ -220,10 +224,11 @@ void load_private_key(){
 
   size_t required_size;
   nvs_get_str(my_nvs_handle, "PrivateKey", NULL, &required_size);
-  if (required_size != 0) {
+  if (required_size != 0 and required_size > 10) {
     char* tmp_key = (char*)malloc(required_size);
     nvs_get_str(my_nvs_handle, "PrivateKey", tmp_key, &required_size);
-    api_key = tmp_key;
+    strcpy(api_key, tmp_key);  
+    free(tmp_key);
 
     #ifdef DEBUG
       Serial.print("Private Key loaded from memory: ");
@@ -232,7 +237,7 @@ void load_private_key(){
        delay(10);
     #endif
 
-  }else if(api_key != "-"){
+  }else if(strcmp(api_key, "-") != 0){
     nvs_set_str(my_nvs_handle, "PrivateKey", api_key);
     nvs_commit(my_nvs_handle);
 
@@ -244,7 +249,7 @@ void load_private_key(){
     #endif
   }
 
-  if(myStrlen(api_key) < 10 && CurrentStatus == WIFI_SETUP){
+  if(myStrlen(api_key) < 10 && CurrentStatus != WIFI_SETUP){
     #ifdef DEBUG
       Serial.print("ERROR: Short API KEY: ");
       Serial.println(api_key);
@@ -257,25 +262,6 @@ void load_private_key(){
 
 }
 
-void load_email(){
-
-  size_t required_size;
-  nvs_get_str(my_nvs_handle, "Email", NULL, &required_size);
-  if (required_size != 0) {
-    char* tmp_email = (char*)malloc(required_size);
-    nvs_get_str(my_nvs_handle, "Email", tmp_email, &required_size);
-    email = tmp_email;
-
-    #ifdef DEBUG
-      Serial.print("Email loaded from memory: ");
-      Serial.println(email);
-    #else
-       delay(10);
-    #endif
-
-  }
-
-}
 
 void restart_after_wakeup()
 {
@@ -504,7 +490,7 @@ bool HttpRegDevice(){
     #endif
 
 
-    char urlout[255];
+    char urlout[355];
 
     String email_encoded = urlEncode(email);
     // we are going to start here
@@ -563,10 +549,24 @@ bool HttpRegDevice(){
             String latest_relay_fw = https.header("fw-version");
             String wlp_key = https.header("wpl-key");
 
-            if(wlp_key != "-" && myStrlen(wlp_key.c_str()) >= 7 and api_key == "-")
+            #ifdef DEBUG
+              Serial.print("assigned wpl-key: ");
+              Serial.println(wlp_key);
+              Serial.print("Old api_key: ");
+              Serial.println(api_key);
+            #endif
+
+            if(wlp_key.length() >= 7 && strcmp(api_key, "-") == 0)
             {
-                api_key = (char*)wlp_key.c_str();
+                strcpy(api_key, wlp_key.c_str());
+                load_private_key();
             }
+            #ifdef DEBUG
+              else{
+                Serial.println("Invalid key status");
+              }
+            #endif
+            
 
           }
 
@@ -761,6 +761,7 @@ bool SetupResetWifi(){
 
   // set configportal timeout 10 min
   wm.setConfigPortalTimeout(3000);
+  wm.setSaveConnectTimeout(20);
 
   if (!wm.startConfigPortal(WIFI_NAME, WIFI_PASSW)) {
 
@@ -769,6 +770,11 @@ bool SetupResetWifi(){
     #else
        delay(10);
     #endif
+
+    nvs_set_i32(my_nvs_handle, "0-status", (int32_t)WIFI_SETUP);
+    nvs_commit(my_nvs_handle);
+    CurrentStatus = WIFI_SETUP;
+    wm.resetSettings();
 
     delay(3000);
     //reset and try again, or maybe put it to deep sleep
@@ -782,7 +788,7 @@ bool SetupResetWifi(){
        delay(10);
   #endif
 
-  if(email != "-"){
+  if(myStrlen(email) > 7){
     HttpRegDevice();
   }
   
@@ -852,7 +858,7 @@ void load_settings(){
     #endif
 
 
-  if(status >= 0 && status <= 4){
+  if(status == 1 || status == 3){
     CurrentStatus = (ConfigStatus)status;
   }else{
     #ifdef DEBUG
