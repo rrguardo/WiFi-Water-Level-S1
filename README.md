@@ -64,7 +64,7 @@ but you can make your own server using the sample provided.
 
 ---
 
-## Hardware part at OSHWLab (ongoing)
+## Hardware part at OSHWLab
 
 https://oshwlab.com/rrguardo83/water-level-.pro-s1-v2
 
