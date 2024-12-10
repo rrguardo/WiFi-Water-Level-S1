@@ -6,10 +6,6 @@ To ensure that a case designed for outdoor use is durable and resistant to envir
 
 **PETG** is a great choice for outdoor applications due to its resistance to UV light and moisture. Follow these settings for optimal results:
 
-### Temperature Settings
-- **For Brass Nozzle**: Use a nozzle temperature of 250°C.
-- **For Steel Nozzle**: Use a nozzle temperature of 260°C.
-- Set the bed temperature to 70°C to 80°C to ensure proper adhesion.
 
 ### Layer Height
 - Use a smaller layer height (e.g., 0.2mm) to ensure finer details and better strength.
@@ -73,12 +69,6 @@ To achieve the best results when printing 11mm diameter screws using FDM printer
 
 - Increase the wall thickness (e.g., 4 to 6 walls) to enhance the structural integrity of the screw and prevent layer separation.
 
-## Temperature Settings
-
-- **For Brass Nozzle**: Use a nozzle temperature of 250°C.
-- **For Steel Nozzle**: Use a nozzle temperature of 270°C.
-- Set the bed temperature to 70°C to 80°C for optimal adhesion.
-
 ## Cooling
 
 - Minimize or turn off the cooling fan to prevent layer delamination and ensure strong layer bonding.
@@ -92,3 +82,9 @@ To achieve the best results when printing 11mm diameter screws using FDM printer
 - A 0.6mm nozzle can be used to print the screws quickly and effectively while still achieving good thread definition. Ensure the print temperature is increased to improve layer adhesion and overall quality.
 
 By following these guidelines, you can enhance the performance, durability, and precision of 11mm diameter screws printed with PETG filament.
+
+---
+
+## Other details
+*  Solar lid is divided in 2 parts **SolarLid.stl** and **SolarSupportV2.stl**, use silicon glue to join the 2 parts.
+* ...

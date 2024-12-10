@@ -94,7 +94,7 @@ For more details about important 3d printing recommendations
 
 ![Top View](images/CasePreview.jpeg)
 
-![Bottom View](images/CasePreview2.jpeg)
+![Bottom View](images/S1Show.gif)
 
 ### No 3D Printer? No Problem! Easily Print Parts Using Online 3D Printing Service
 
