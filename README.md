@@ -53,8 +53,6 @@ under the GPLv3 license, allowing for free use and modification.
 
 This devide use ESP32-C3 microcontroller can use Arduino IDE to flash/upload microcontroller code, using **ESP32C3 Dev Module** as board.
 
-Before upload the code, generate a new private and public keys in developer zone at https://waterlevel.pro/settings  https://waterlevel.pro/add_sensor
-
 ## Server Side Minimal Sample in Python
 
 Note [WaterLevel.Pro](https://waterlevel.pro/) offer this server side service free, 
