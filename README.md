@@ -116,7 +116,7 @@ Choose durable materials like **PETG** for outdoor use, and set **infill at 60%*
 ![Pipe Mount](images/s1_pipe_mount.png)
 
 ### Water tank lid mount
-![Pipe Mount](images/s1_lid_mount.png)
+![Lid Mount](images/s1_lid_mount.png)
 
 ## Disclaimer
 
