@@ -44,7 +44,7 @@ under the GPLv3 license, allowing for free use and modification.
 
 ### Device Compatible Solar Panels
 
-* Tested with 5.5 V, 130 mA Solar Panel
+* Tested with 5.5 V, 130 mA Solar Panel (5.5V 130mA 72x72mm) https://www.aliexpress.us/item/3256804502745527.html using D1 5V zener. 
 * Don't use solar panels that pass the 250 mA or 5.5V
 
 ## Microcontroller Software
