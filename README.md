@@ -143,7 +143,7 @@ the reliability of the final product.
 
 ---
 
-<div style="text-align: center;">
+<div align="center">
   <h5>Designed in the Dominican Republic 2024</h5>
   <img src="images/rd.gif" alt="RD" width="70px" />
 </div>
