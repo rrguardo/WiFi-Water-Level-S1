@@ -11,9 +11,6 @@ Additionally, it integrates seamlessly with the [Automatic Water Pump for S1 pro
 automatic control of a water pump based on the sensor's data. This integration enhances the system's 
 efficiency by automating water management processes.
 
-Please note that this is an incomplete ongoing project. I am moving it from a working project on the development board to 
-certified production chips and new SMD components, for easy assembly and production.
-
 The project is open source and open hardware, licensed under GPLv3. All hardware, software, and
 3D printable components were designed from scratch by me, **Raul Rodriguez Guardo**, and are released 
 under the GPLv3 license, allowing for free use and modification.
@@ -30,7 +27,7 @@ under the GPLv3 license, allowing for free use and modification.
   <img src="images/cell_hand.png" alt="Imagen 2" width="300"/>
 </div>
 
-### Device Size and Weight
+### Device Size and Weight (pending update)
 
 * Weight 370 grams (0.8 pounds) including batterries and AJ-SR04M sensor
 * Weight 260 grams (0.57 pounds) without batterries or  AJ-SR04M sensor
@@ -116,6 +113,18 @@ Choose durable materials like **PETG** for outdoor use, and set **infill at 60%*
 ### Water tank lid mount
 ![Lid Mount](images/s1_lid_mount.png)
 
+---
+## User Installation Manual
+
+The [installation manual](https://waterlevel.pro/manuals/WiFi-Water-Level-S1) provides 
+detailed instructions on setting up the WiFi Water Level S1. 
+Be sure to [read all instructions](https://waterlevel.pro/manuals/WiFi-Water-Level-S1) 
+carefully before proceeding with the installation to ensure proper 
+setup and functionality.
+
+[WiFi Water Level S1, Installation Manual](https://waterlevel.pro/manuals/WiFi-Water-Level-S1)
+
+---
 ## Disclaimer
 
 This open-source electronics project is provided **"as is."** No warranties of any kind, 
