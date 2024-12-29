@@ -58,9 +58,12 @@ This devide use ESP32-C3 microcontroller can use Arduino IDE to flash/upload mic
 
 Note [WaterLevel.Pro](https://waterlevel.pro/) offer a more advanced server side service free, 
 but you can make your own server using the sample provided as a minimal sample. 
-Pending TODO: Improve the opensource Server Side Minimal Sample UI.
 
 [Server sample that process and show sensor data](demo_server.py)
+
+Pending TODO: Improve the opensource Server Side Minimal Sample UI.
+
+
 
 ---
 
