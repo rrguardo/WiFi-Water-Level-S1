@@ -16,13 +16,13 @@
  */
 
 // IDE and Board
-// Arduino Framework version: 2.3.3
+// Arduino Framework version: 2.3.4
 // Arduino Board Module: ESP32C3 Dev Module
 // Board: ESP32-C3-MINI-1U-H4
 // Board Manager URL: https://arduino.esp8266.com/stable/package_esp8266com_index.json
 
 // Libraries used:
-// WiFiManager by tzapu version: 2.0.17
+// WiFiManager by tzapu version: 2.0.16-rc.2
 
 
 #include <Arduino.h>
@@ -51,7 +51,7 @@
 // DEV MODE allow app update remote
 const bool DEV_MODE = true;
 const char* firmwareUrl = "https://waterlevel.pro/static/fw";
-int FIRMW_VER = 18;
+int FIRMW_VER = 15;
 
 int32_t rssi = 0;
 
@@ -94,8 +94,8 @@ const char* host_url = "https://api.waterlevel.pro/update";
 const char* host_link_url = "https://api.waterlevel.pro/link";
 
 char api_key[128] = "-";  //  PRIVATE KEY HERE // "-" none-null-api-key
-// generate new key in developer zone at https://waterlevel.pro/settings   https://waterlevel.pro/add_sensor
 // use value "-" for automatic api key setup
+// or manually generate and use new key in developer zone at https://waterlevel.pro/settings   https://waterlevel.pro/add_sensor
 
 const char* WIFI_NAME = "WaterLevelProSetup";
 const char* WIFI_PASSW = "1122334455";
@@ -222,7 +222,7 @@ int myStrlen(const char* str) {
 
 void load_private_key(){
 
-  size_t required_size;
+  size_t required_size = 0;
   nvs_get_str(my_nvs_handle, "PrivateKey", NULL, &required_size);
   if (required_size != 0 and required_size > 10) {
     char* tmp_key = (char*)malloc(required_size);
@@ -759,7 +759,7 @@ bool SetupResetWifi(){
   std::vector<const char *> menu = {"wifi","restart","exit"};
   wm.setMenu(menu);
 
-  // set configportal timeout 10 min
+  // set configportal timeout 50 min
   wm.setConfigPortalTimeout(3000);
   wm.setSaveConnectTimeout(20);
 
