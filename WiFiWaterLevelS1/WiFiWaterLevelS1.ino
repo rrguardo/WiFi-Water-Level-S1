@@ -43,7 +43,7 @@
 
 
 
-#define DEBUG  // Comment this line to disable serial prints
+//#define DEBUG  // Comment this line to disable serial prints
 
 #define EMAIL_MAX_LENGTH 128  // Nuevo tamaño para el email
 
@@ -51,7 +51,7 @@
 // DEV MODE allow app update remote
 const bool DEV_MODE = true;
 const char* firmwareUrl = "https://waterlevel.pro/static/fw";
-int FIRMW_VER = 15;
+int FIRMW_VER = 20;
 
 int32_t rssi = 0;
 
@@ -704,8 +704,8 @@ bool HttpSendInfo(int distance, float LastVoltage){
                 #ifdef DEBUG
                   Serial.println("new FW release");
                 #else
-       delay(10);
-    #endif
+                  delay(10);
+                #endif
                 updateFirmware(fw_ver);
             }
 
