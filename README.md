@@ -54,6 +54,8 @@ under the GPLv3 license, allowing for free use and modification.
 
 This devide use ESP32-C3 microcontroller can use Arduino IDE to flash/upload microcontroller code, using **ESP32C3 Dev Module** as board.
 
+[Download Latest Firmware Builds Here](WiFiWaterLevelS1/firmwares/)
+
 ## Server Side Minimal Sample in Python
 
 Note [WaterLevel.Pro](https://waterlevel.pro/) offer a more advanced server side service free, 
@@ -133,6 +135,19 @@ setup and functionality.
 [WiFi Water Level S1, Installation Manual](https://waterlevel.pro/manuals/WiFi-Water-Level-S1)
 
 ---
+
+## What parts are opensource?
+
+* All the hardware part
+  * Electronics part: PCB, schematic.
+  * Printable 3D Case
+* Firmware software
+* [Server sample that process and show sensor data](demo_server.py)
+
+The server side implementation at https://waterlevel.pro/ (cloud services) that use the device are not 
+included in this project or git repo and are not opensource.
+
+---
 ## Disclaimer
 
 This open-source electronics project is provided **"as is."** No warranties of any kind, 
@@ -161,7 +176,7 @@ the reliability of the final product.
 ---
 
 <div align="center">
-  <h5>Designed in the Dominican Republic 2024</h5>
+  <h5>Designed in the Dominican Republic 2024-2025</h5>
   <img src="images/rd.gif" alt="RD" width="70px" />
 </div>
 
