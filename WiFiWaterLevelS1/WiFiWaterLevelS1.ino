@@ -51,7 +51,7 @@
 // DEV MODE allow app update remote
 const bool DEV_MODE = true;
 const char* firmwareUrl = "https://waterlevel.pro/static/fw";
-int FIRMW_VER = 20;
+int FIRMW_VER = 21;
 
 int32_t rssi = 0;
 
@@ -123,7 +123,7 @@ void setup() {
   #ifdef DEBUG
     Serial.println("Setup Started!");
   #else
-    delay(10);
+    delay(5);
   #endif
 
   tiempoArranque = millis();
@@ -146,14 +146,14 @@ void setup() {
     #ifdef DEBUG
       Serial.println("Error opening nvs handler");
     #else
-      delay(10);
+      delay(5);
     #endif
 
   } else {
     #ifdef DEBUG
       Serial.println("Done opening nvs handler");
     #else
-      delay(10);
+      delay(5);
     #endif
   }
 
@@ -200,7 +200,7 @@ void saveConfigCallback() {
       Serial.print("Email to linked: ");
       Serial.println(email);
     #else
-       delay(10);
+       delay(5);
     #endif
   }else{
     Serial.print("Invalid email: ");
@@ -234,7 +234,7 @@ void load_private_key(){
       Serial.print("Private Key loaded from memory: ");
       Serial.println(api_key);
     #else
-       delay(10);
+       delay(5);
     #endif
 
   }else if(strcmp(api_key, "-") != 0){
@@ -245,7 +245,7 @@ void load_private_key(){
       Serial.print("Private Key loaded from code: ");
       Serial.println(api_key);
     #else
-       delay(10);
+       delay(5);
     #endif
   }
 
@@ -254,7 +254,7 @@ void load_private_key(){
       Serial.print("ERROR: Short API KEY: ");
       Serial.println(api_key);
     #else
-       delay(10);
+       delay(5);
     #endif
     esp_system_abort("restart_after_wakeup");
   }
@@ -300,13 +300,13 @@ float UnderVoltageProt(bool is_setup, int tryNum){
   Serial.println(" V");
 
   #else
-       delay(10);
+       delay(5);
     #endif
 
   if(voltaje <= LowVoltage){
     Serial.println("Under Voltage Detected");
     if(tryNum < 3){
-      delay(delay_time);
+      non_lock_delay(delay_time);
       return UnderVoltageProt(is_setup, tryNum + 1);
     }
 
@@ -344,11 +344,11 @@ void loop() {
   #ifdef DEBUG
     Serial.println("sleeping to save energy");
   #else
-       delay(10);
+       delay(5);
     #endif
 
   SleepSave(WIFI_POOL_TIME);
-  delay(100);
+  delay(5);
 
 }
 
@@ -372,7 +372,7 @@ int getDistance() {
     Serial.print("Distance: ");
     Serial.println(distance);
   #else
-       delay(10);
+       delay(5);
     #endif
 
   return distance;
@@ -387,7 +387,7 @@ ICACHE_RAM_ATTR void botonPresionado() {
   #ifdef DEBUG
     Serial.println("El botón está presionado");
   #else
-       delay(10);
+       delay(5);
     #endif
 
   nvs_set_i32(my_nvs_handle, "0-status", (int32_t)WIFI_SETUP);
@@ -396,7 +396,7 @@ ICACHE_RAM_ATTR void botonPresionado() {
   CurrentStatus = WIFI_SETUP;
   wm.resetSettings();
 
-  delay(500);
+  delay(5);
   esp_system_abort("restart_after_wakeup");
 
 }
@@ -407,7 +407,7 @@ void SleepSave(int seconds){
   #ifdef DEBUG
     Serial.println("Will sleep now");
   #else
-       delay(10);
+       delay(5);
     #endif
   //Deep-sleep for 9 seconds, and then wake up
   esp_set_deep_sleep_wake_stub(restart_after_wakeup);
@@ -424,6 +424,33 @@ void SleepSave(int seconds){
   // 1 -calib  ## 2 - no-calib
   //system_deep_sleep_set_option(2);
 
+}
+
+
+void non_lock_delay(unsigned long mili_seconds) {
+  static unsigned long previousMillis = 0;
+  static bool isWaiting = false;
+
+  unsigned long currentMillis = millis();
+
+  // Inicio de espera
+  if (!isWaiting) {
+    previousMillis = currentMillis;
+    isWaiting = true;
+  }
+
+  while (isWaiting) {
+    currentMillis = millis();
+    
+    // Verificar si el tiempo ha pasado
+    if (currentMillis - previousMillis >= mili_seconds) {
+      isWaiting = false; // Reiniciar la espera
+
+    }
+
+    // Permitir que el sistema operativo maneje tareas críticas
+    delay(1); // Mantener el sistema operativo funcionando mientras se espera
+  }
 }
 
 
@@ -474,7 +501,7 @@ bool HttpRegDevice(){
     #ifdef DEBUG
       Serial.println("Connected to WiFi");
     #else
-       delay(10);
+       delay(5);
     #endif
 
     long timeout = 15000;
@@ -486,7 +513,7 @@ bool HttpRegDevice(){
     #ifdef DEBUG
       Serial.print("[HTTPS] begin...\n");
     #else
-       delay(10);
+       delay(5);
     #endif
 
 
@@ -529,7 +556,7 @@ bool HttpRegDevice(){
         #ifdef DEBUG
           Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
         #else
-          delay(10);
+          delay(5);
         #endif
 
         // file found at server
@@ -541,7 +568,7 @@ bool HttpRegDevice(){
             Serial.print("response payload: ");
             Serial.println(payload);
           #else
-            delay(10);
+            delay(5);
           #endif
 
           if(payload == "OK"){
@@ -556,10 +583,12 @@ bool HttpRegDevice(){
               Serial.println(api_key);
             #endif
 
-            if(wlp_key.length() >= 7 && strcmp(api_key, "-") == 0)
+            if(wlp_key.length() >= 7)
             {
                 strcpy(api_key, wlp_key.c_str());
-                load_private_key();
+                nvs_set_str(my_nvs_handle, "PrivateKey", api_key);
+                nvs_commit(my_nvs_handle);
+                delay(5);
             }
             #ifdef DEBUG
               else{
@@ -578,7 +607,7 @@ bool HttpRegDevice(){
         #ifdef DEBUG
           Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
         #else
-          delay(10);
+          delay(5);
         #endif
         https.end();
         return false;
@@ -588,7 +617,7 @@ bool HttpRegDevice(){
       #ifdef DEBUG
         Serial.printf("[HTTPS] Unable to connect\n");
       #else
-       delay(10);
+       delay(5);
     #endif
       return false;
     }
@@ -597,7 +626,7 @@ bool HttpRegDevice(){
     #ifdef DEBUG
       Serial.println("Failed to connect to WiFi");
     #else
-       delay(10);
+       delay(5);
     #endif
   }
   return false;
@@ -611,7 +640,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
     #ifdef DEBUG
       Serial.println("Connected to WiFi");
     #else
-       delay(10);
+       delay(5);
     #endif
 
     long timeout = 15000;
@@ -623,7 +652,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
     #ifdef DEBUG
       Serial.print("[HTTPS] begin...\n");
     #else
-       delay(10);
+       delay(5);
     #endif
 
     char dist_str[10];
@@ -672,7 +701,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
         #ifdef DEBUG
           Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
         #else
-       delay(10);
+       delay(5);
     #endif
 
         // file found at server
@@ -684,7 +713,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
             Serial.print("response payload: ");
             Serial.println(payload);
           #else
-       delay(10);
+       delay(5);
     #endif
 
           // Tamaño del array para almacenar los valores
@@ -704,7 +733,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
                 #ifdef DEBUG
                   Serial.println("new FW release");
                 #else
-                  delay(10);
+                  delay(5);
                 #endif
                 updateFirmware(fw_ver);
             }
@@ -719,7 +748,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
         #ifdef DEBUG
           Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
         #else
-       delay(10);
+       delay(5);
     #endif
         https.end();
         return false;
@@ -729,7 +758,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
       #ifdef DEBUG
         Serial.printf("[HTTPS] Unable to connect\n");
       #else
-       delay(10);
+       delay(5);
     #endif
       return false;
     }
@@ -738,7 +767,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
     #ifdef DEBUG
       Serial.println("Failed to connect to WiFi");
     #else
-       delay(10);
+       delay(5);
     #endif
   }
   return false;
@@ -749,7 +778,7 @@ bool SetupResetWifi(){
   //WiFi.setTxPower(WIFI_POWER_8_5dBm);
   WiFi.mode(WIFI_AP); // explicitly set mode
   //WiFi.setTxPower(WIFI_POWER_8_5dBm);
-  delay(250);
+  delay(5);
 
   //reset settings
   // wm.resetSettings();
@@ -768,7 +797,7 @@ bool SetupResetWifi(){
     #ifdef DEBUG
       Serial.println("failed to connect and hit timeout");
     #else
-       delay(10);
+       delay(5);
     #endif
 
     nvs_set_i32(my_nvs_handle, "0-status", (int32_t)WIFI_SETUP);
@@ -776,16 +805,16 @@ bool SetupResetWifi(){
     CurrentStatus = WIFI_SETUP;
     wm.resetSettings();
 
-    delay(3000);
+    delay(5);
     //reset and try again, or maybe put it to deep sleep
     esp_system_abort("restart_after_wakeup");
-    delay(5000);
+    delay(5);
   }
 
   #ifdef DEBUG
     Serial.println("connected success!");
   #else
-       delay(10);
+       delay(5);
   #endif
 
   if(myStrlen(email) > 7){
@@ -796,7 +825,7 @@ bool SetupResetWifi(){
   nvs_commit(my_nvs_handle);
   CurrentStatus = WIFI;
 
-  delay(3000);
+  delay(5);
   esp_system_abort("restart_after_wakeup");
 
 }
@@ -809,7 +838,7 @@ bool ConnectWifi(){
     WiFi.mode(WIFI_STA); // explicitly set mode
     //WiFi.setTxPower(WIFI_POWER_8_5dBm);
     //wifi_station_connect();
-    delay(250);
+    delay(5);
 
     wm.setConnectRetries(3);
     wm.setConnectTimeout(15);
@@ -826,7 +855,7 @@ bool ConnectWifi(){
       #ifdef DEBUG
         Serial.println("failed to connect and hit timeout");
       #else
-       delay(10);
+       delay(5);
     #endif
       return false;
     }
@@ -839,7 +868,7 @@ bool ConnectWifi(){
       Serial.print(rssi);
       Serial.println(" dBm");
     #else
-       delay(10);
+       delay(5);
     #endif
 
     return true;
@@ -854,7 +883,7 @@ void load_settings(){
     Serial.print("Loaded Status: ");
     Serial.println(status);
   #else
-       delay(10);
+       delay(5);
     #endif
 
 
@@ -864,7 +893,7 @@ void load_settings(){
     #ifdef DEBUG
       Serial.println("EEPROM DEF!");
     #else
-       delay(10);
+       delay(5);
     #endif
     nvs_set_i32(my_nvs_handle, "0-status", (int32_t)WIFI_SETUP);
     nvs_commit(my_nvs_handle);
@@ -875,7 +904,7 @@ void load_settings(){
     Serial.print("Status Loaded = ");
     Serial.println(CurrentStatus);
   #else
-       delay(10);
+       delay(5);
     #endif
 
 }
@@ -887,7 +916,7 @@ void updateFirmware(int new_fw_vers) {
   #ifdef DEBUG
     Serial.print("Conectando al servidor para descargar el firmware...");
   #else
-       delay(10);
+       delay(5);
     #endif
 
   char urlout[255];
@@ -900,7 +929,7 @@ void updateFirmware(int new_fw_vers) {
       #ifdef DEBUG
         Serial.println("Firmware encontrado. Iniciando actualización...");
       #else
-       delay(10);
+       delay(5);
     #endif
 
       size_t updateSize = http.getSize();
@@ -913,35 +942,35 @@ void updateFirmware(int new_fw_vers) {
             #ifdef DEBUG
               Serial.println("Actualización exitosa. Reiniciando...");
             #else
-       delay(10);
+       delay(5);
     #endif
             esp_system_abort("restart_after_wakeup");
           } else {
             #ifdef DEBUG
               Serial.println("Error al finalizar la actualización.");
             #else
-       delay(10);
+       delay(5);
     #endif
           }
         } else {
           #ifdef DEBUG
             Serial.println("Error al escribir en el firmware.");
           #else
-       delay(10);
+       delay(5);
     #endif
         }
       } else {
         #ifdef DEBUG
           Serial.println("Error al iniciar la actualización.");
         #else
-       delay(10);
+       delay(5);
     #endif
       }
     } else {
       #ifdef DEBUG
         Serial.println("Firmware no encontrado. Código de error HTTP: " + String(httpResponseCode));
       #else
-       delay(10);
+       delay(5);
     #endif
     }
 
@@ -950,7 +979,7 @@ void updateFirmware(int new_fw_vers) {
     #ifdef DEBUG
       Serial.println("Error al conectarse al servidor.");
     #else
-       delay(10);
+       delay(5);
     #endif
   }
 }
