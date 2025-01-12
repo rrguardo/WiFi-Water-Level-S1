@@ -148,30 +148,56 @@ The server side implementation at https://waterlevel.pro/ (cloud services) that 
 included in this project or git repo and are not opensource.
 
 ---
-## Disclaimer
 
-This open-source electronics project is provided **"as is."** No warranties of any kind, 
-either express or implied, including but not limited to implied warranties of 
-merchantability or fitness for a particular purpose, are made. Use this project at 
-your own risk. We are not responsible for any damage, loss, or inconvenience that 
-may arise from the use of this project.
+## Important Disclaimer
+
+> **Disclaimer:**  
+This open-source electronics project/device is provided strictly for experimental, educational, and developmental purposes. It is offered "as is," without any warranties, express or implied. This includes, but is not limited to, implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
+
+### By using this device, you acknowledge and accept that:
+
+- You assume all risks associated with its use, including but not limited to potential damage to property, personal injury, or any other unintended consequences.
+- This device is not certified for commercial, industrial, or safety-critical applications. It is intended solely for developers, hobbyists, and other users with appropriate technical expertise.
+- The creators and distributors of this project are not liable for any damages, losses, or inconveniences resulting from its use, modification, or integration into other systems.
+
+Users are solely responsible for ensuring that the use of this device complies with local laws, regulations, and safety standards in their region.
+
+---
+
+### Donations for Certifications and Safety Testing (UL, CE, FCC)
+
+To help reduce risks and obtain certifications for UL, CE, and FCC safety testing, 
+your contributions are greatly appreciated. You can donate via the following channels:
+
+#### GitHub Sponsors:
+
+<div align="center">
+  <h5><a href="https://github.com/sponsors/rrguardo" >GitHub Sponsors</a></h5>
+  <img src="images/cards.png" alt="btc" width="100px" />
+</div>
 
 
-## Compliance Description for Open Hardware Device
+---
 
-This open hardware device **does not have formal FCC, CE, or a Declaration of Conformity (DoC)** 
-as an independent product, as it has been designed under the principles of free distribution and 
-community use. However, the core component used in this device is the **ESP32-C3-MINI-1U-H4**, which 
-has already been [pre-certified by the FCC and others](https://www.espressif.com/en/support/documents/certificates?keys=&field_product_value%5B%5D=ESP32-C3-MINI-1U), and complies with regulatory requirements.
+#### Crypto Donations:
 
-- **FCC ID of the ESP32-C3-MINI-1U-H4:** 2AC7Z-ESP32C3MINI1
-- **CE Certification:** This module complies with European CE regulations.
-- **SRRC Certification in China and MIC Certification in Japan:** Ensuring compatibility in these regions.
+<div align="center">
+  <img src="images/btc.png" alt="btc" width="100px" />
+  <h5>Bitcoin (BTC):</h5>
+  <img src="images/btc_donations.png" alt="RD" width="170px" />
+  <p><b>BTC Address:</b> bc1qv9eeluynl70g87l4agf48x6ktqtetswk7kyyng</p>
+</div>
 
-For those interested in assembling this device, we recommend using **JLCPCB** and **LCSC** services, which 
-are recognized suppliers in the electronics industry. Both offer high-quality components and services, and 
-many of their parts come with certifications that ensure safety and regulatory compliance, contributing to 
-the reliability of the final product.
+---
+
+<div align="center">
+  <img src="images/eth.png" alt="RD" width="100px" />
+  <h5>Ethereum (ETH):</h5>
+  
+  <img src="images/eth_donations.png" alt="RD" width="170px" />
+  <p><b>ETH Address:</b> 0x9f87cF861eA526B78C72a30BB1bD37758c2f36Ed</p>
+</div>
+
 
 ---
 
