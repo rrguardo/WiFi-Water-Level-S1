@@ -149,6 +149,15 @@ included in this project or git repo and are not opensource.
 
 ---
 
+## Next TODO:
+
+* Add basic DIY Guide
+* Improve the opensource server sample
+  * UI
+* ...
+
+---
+
 ## Important Disclaimer
 
 > **Disclaimer:**  
