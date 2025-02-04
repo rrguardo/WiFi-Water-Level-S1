@@ -71,7 +71,7 @@ Pending TODO: Improve the opensource Server Side Minimal Sample UI.
 
 ## Hardware part at OSHWLab
 
-https://oshwlab.com/rrguardo83/water-level-.pro-s1-v2
+[ESP32C3 SunBuddy Development Module](https://oshwlab.com/rrguardo83/water-level-.pro-s1-v2)
 
 ![S1 PCB](images/S1_PCB.png)
 
