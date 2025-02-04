@@ -51,7 +51,7 @@
 // DEV MODE allow app update remote
 const bool DEV_MODE = true;
 const char* firmwareUrl = "https://waterlevel.pro/static/fw";
-int FIRMW_VER = 21;
+int FIRMW_VER = 22;
 
 int32_t rssi = 0;
 
@@ -336,7 +336,14 @@ void loop() {
   last_distance = getDistance();
 
   ConnectWifi();
-  HttpSendInfo(last_distance, LastVoltage);
+  for (int i2 = 0; i2 < 3; i2++) {
+    if (HttpSendInfo(last_distance, LastVoltage)){
+      break;
+    }
+    non_lock_delay(5000); // wait 5 seconds before next try
+    WIFI_POOL_TIME = 300; // sleep 5 min. if not internet
+  }
+  
 
   wm.disconnect();
   WiFi.mode(WIFI_OFF);
@@ -701,8 +708,8 @@ bool HttpSendInfo(int distance, float LastVoltage){
         #ifdef DEBUG
           Serial.printf("[HTTPS] GET... code: %d\n", httpCode);
         #else
-       delay(5);
-    #endif
+          delay(5);
+        #endif
 
         // file found at server
         if (httpCode == HTTP_CODE_OK || httpCode == HTTP_CODE_MOVED_PERMANENTLY) {
@@ -713,8 +720,8 @@ bool HttpSendInfo(int distance, float LastVoltage){
             Serial.print("response payload: ");
             Serial.println(payload);
           #else
-       delay(5);
-    #endif
+            delay(5);
+          #endif
 
           // Tamaño del array para almacenar los valores
           const int arraySize = 5;
@@ -748,8 +755,8 @@ bool HttpSendInfo(int distance, float LastVoltage){
         #ifdef DEBUG
           Serial.printf("[HTTPS] GET... failed, error: %s\n", https.errorToString(httpCode).c_str());
         #else
-       delay(5);
-    #endif
+          delay(5);
+        #endif
         https.end();
         return false;
       }
@@ -759,7 +766,7 @@ bool HttpSendInfo(int distance, float LastVoltage){
         Serial.printf("[HTTPS] Unable to connect\n");
       #else
        delay(5);
-    #endif
+      #endif
       return false;
     }
 
