@@ -71,14 +71,13 @@ Pending TODO: Improve the opensource Server Side Minimal Sample UI.
 
 ## Hardware part at OSHWLab
 
-[ESP32C3 SunBuddy Development Module](https://oshwlab.com/rrguardo83/water-level-.pro-s1-v2)
+[SunBuddy-C3 Module](https://oshwlab.com/rrguardo83/water-level-.pro-s1-v2)
 
 ![S1 PCB](images/S1_PCB.png)
 
 ### Where buy the PCB board?
-[At OSHWLab project, opening the EasyEDA](https://oshwlab.com/rrguardo83/water-level-.pro-s1-v2) 
-editor can in few click buy the entire board with all the PCB components including the components assembly, 
-directly from **JLCPCB** and **LCSC** services.
+[At EasyEDA project](https://waterlevel.pro/short/sunbuddy)
+editor click **Order** menu.
 
 ### PCB Component Roles Diagram
 
