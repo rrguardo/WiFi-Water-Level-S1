@@ -31,12 +31,6 @@ under the GPLv3 license, allowing for free use and modification.
   <img src="images/cell_hand.png" alt="Imagen 2" width="300"/>
 </div>
 
-### Device Size and Weight (pending update)
-
-* Weight 370 grams (0.8 pounds) including batterries and AJ-SR04M sensor
-* Weight 260 grams (0.57 pounds) without batterries or  AJ-SR04M sensor
-* Main case box size 90 milimeters X 56 milimeters without including mount or WiFi antena.
-
 ### Device Compatible Sensors
 
 * All **HCSR04** sensors family, that can work with **3.3V**
@@ -47,6 +41,10 @@ under the GPLv3 license, allowing for free use and modification.
 
 * Tested with 5.5 V, 130 mA Solar Panel (5.5V 130mA 72x72mm) https://www.aliexpress.us/item/3256804502745527.html using D1 5V zener. 
 * Don't use solar panels that pass the 250 mA or 5.5V
+
+## DIY Guide
+
+For a detailed guide on how to build this project, check out the full tutorial at [Instructables](https://www.instructables.com/Build-Your-Own-DIY-WiFi-Water-Level-Sensor-S1/).
 
 ## Microcontroller Software
 
