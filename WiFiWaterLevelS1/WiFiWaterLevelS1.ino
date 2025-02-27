@@ -24,6 +24,12 @@
 // Libraries used:
 // WiFiManager by tzapu version: 2.0.16-rc.2
 
+// Usage DOC
+//
+// * To Disable live updates set  DEV_MODE = false
+// * To enable UART (A02YYUW) sensor uncomment >> #define UART_SENSOR   this will disable HCSR04 family sensors
+//
+
 
 #include <Arduino.h>
 

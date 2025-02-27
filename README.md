@@ -34,8 +34,15 @@ under the GPLv3 license, allowing for free use and modification.
 ### Device Compatible Sensors
 
 * All **HCSR04** sensors family, that can work with **3.3V**
-* **AJ-SR04M** recomended for water tanks or places of extreme humidity.
-* **RCWL-1670** is compatible, but will need special waterproff case if will be placed inside water tanks. 
+  *   **AJ-SR04M** recommended for water tanks or places of extreme humidity.
+  *   **RCWL-1670** is compatible, but will need special waterproof case, if will be placed inside water tanks. 
+* UART Distance sensors , that can work with **3.3V** (Not tested yet, experimental)
+  *   **A02YYUW** recommended for water tanks or places of extreme humidity. 
+  Offer a range of 3-450 CM, with an small 3 CM blind area.
+
+**Note:** UART sensors have not been tested with this device yet and are currently in the experimental phase. 
+To enable UART (A02YYUW), add or uncomment `#define UART_SENSOR`. Refer to the schematic or the PCB layout image 
+to identify the RX/TX pins.
 
 ### Device Compatible Solar Panels
 
