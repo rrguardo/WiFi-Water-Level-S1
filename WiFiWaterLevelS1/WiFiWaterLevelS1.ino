@@ -42,6 +42,21 @@
 #include "esp_wifi.h"
 
 
+// uncomment line below to use UART sensors like A02YYUW (This functionality has not been tested yet.)
+//#define UART_SENSOR
+
+
+#ifdef UART_SENSOR
+  #include <HardwareSerial.h>
+
+  // Defining the UART pins for the A02YYUW sensor
+  #define A02YYUW_RX_PIN 20  // GPIO20 connected to the sensor TX
+  #define A02YYUW_TX_PIN 21  // GPIO21 connected to the sensor RX
+  // Initialize the HardwareSerial port
+  HardwareSerial A02YYUW_Serial(0);
+#endif
+
+
 
 //#define DEBUG  // Comment this line to disable serial prints
 
@@ -120,6 +135,11 @@ void setup() {
 
   Serial.begin(115200);
 
+  #ifdef UART_SENSOR
+    // Iniciar la comunicación UART con el sensor
+    A02YYUW_Serial.begin(9600, SERIAL_8N1, A02YYUW_RX_PIN, A02YYUW_TX_PIN);
+  #endif
+
   #ifdef DEBUG
     Serial.println("Setup Started!");
   #else
@@ -173,9 +193,11 @@ void setup() {
     SetupResetWifi();
   }
 
-  // Set the trigger pin as an output and the echo pin as an input
-  pinMode(trigPin, OUTPUT);
-  pinMode(echoPin, INPUT);
+  #ifndef UART_SENSOR
+    // Set the trigger pin as an output and the echo pin as an input
+    pinMode(trigPin, OUTPUT);
+    pinMode(echoPin, INPUT);
+  #endif
 
   // Configuramos el pin del botón como entrada
   pinMode(pinBoton, INPUT_PULLUP);
@@ -360,30 +382,58 @@ void loop() {
 }
 
 
-int getDistance() {
-  // Trigger the sensor to send a pulse
-  digitalWrite(trigPin, LOW);
-  delayMicroseconds(5);
-  digitalWrite(trigPin, HIGH);
-  delayMicroseconds(15);
-  digitalWrite(trigPin, LOW);
+#ifndef UART_SENSOR
+  // non UART distance function
+  int getDistance() {
+    // Trigger the sensor to send a pulse
+    digitalWrite(trigPin, LOW);
+    delayMicroseconds(5);
+    digitalWrite(trigPin, HIGH);
+    delayMicroseconds(15);
+    digitalWrite(trigPin, LOW);
 
-  // Measure the duration of the pulse on the echo pin
-  long duration = pulseIn(echoPin, HIGH);
+    // Measure the duration of the pulse on the echo pin
+    long duration = pulseIn(echoPin, HIGH);
 
-  // Calculate the distance based on the speed of sound (343 meters/second)
-  // and the duration of the pulse
-  int distance = duration * 0.0343 / 2;
+    // Calculate the distance based on the speed of sound (343 meters/second)
+    // and the duration of the pulse
+    int distance = duration * 0.0343 / 2;
 
-  #ifdef DEBUG
-    Serial.print("Distance: ");
-    Serial.println(distance);
-  #else
-       delay(5);
-    #endif
+    #ifdef DEBUG
+      Serial.print("Distance: ");
+      Serial.println(distance);
+    #else
+        delay(5);
+      #endif
 
-  return distance;
-}
+    return distance;
+  }
+#else
+  // UART distance function
+  int getDistance() {
+    // Verificar si hay datos disponibles del sensor
+    if (A02YYUW_Serial.available() >= 4) {
+      // Leer los 4 bytes del marco de datos
+      uint8_t data[4];
+      for (int i = 0; i < 4; i++) {
+        data[i] = A02YYUW_Serial.read();
+      }
+      // Verificar el byte de inicio
+      if (data[0] == 0xFF) {
+        // Calcular el checksum
+        uint8_t checksum = (data[0] + data[1] + data[2]) & 0xFF;
+        // Verificar el checksum
+        if (checksum == data[3]) {
+          // Calcular la distancia en centímetros
+          int distance = ((data[1] << 8) | data[2]) / 10;
+          return distance;
+        }
+      }
+    }
+    // Retornar 0 en caso de error
+    return 0;
+  }
+#endif
 
 
 // Función que se ejecutará cuando el botón se presione
