@@ -166,13 +166,7 @@ included in this project or git repo and are not opensource.
 
 > **Disclaimer:**  
 This open-source electronics project/device is provided strictly for experimental, educational, and developmental purposes. It is offered "as is," without any warranties, express or implied. This includes, but is not limited to, implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
-
-### By using this device, you acknowledge and accept that:
-
-- You assume all risks associated with its use, including but not limited to potential damage to property, personal injury, or any other unintended consequences.
-- This device is not certified for commercial, industrial, or safety-critical applications. It is intended solely for developers, hobbyists, and other users with appropriate technical expertise.
-- The creators and distributors of this project are not liable for any damages, losses, or inconveniences resulting from its use, modification, or integration into other systems.
-
+> 
 Users are solely responsible for ensuring that the use of this device complies with local laws, regulations, and safety standards in their region.
 
 ---
