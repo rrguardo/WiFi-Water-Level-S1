@@ -6,7 +6,8 @@ The **WiFi Water Level S1** is an advanced water level monitoring device designe
 measurements for various applications, including tanks, wells, and reservoirs. 
 Utilizing WiFi connectivity, it enables real-time monitoring and management of water levels from anywhere via a 
 smartphone or computer. Powered by **solar energy**, the device is completely
-wireless and autonomous. 
+wireless and autonomous. The [demo device](https://waterlevel.pro/es/device_info?public_key=demo) has managed to 
+last a year working stable, without needing a battery change or any kind of maintenance using solar energy. 
 
 The system is cloud-connected, requiring an internet connection, and is designed for reliable, continuous operation.
 For more details, refer to the [full features page](https://waterlevel.pro/products/WiFi-Water-Level-S1).
