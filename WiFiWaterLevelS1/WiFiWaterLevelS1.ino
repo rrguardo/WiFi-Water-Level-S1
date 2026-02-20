@@ -107,7 +107,7 @@ unsigned long tiempoArranque;
 unsigned long tiempoBateria = 0;
 
 
-// If will use a custom private server, replace this with the URL you want to send the sensor info. See **demo_server.py** for a free open source server sample in python-flask
+// If you use a custom private server, replace this URL with your own endpoint. For a complete reference implementation, see https://github.com/rrguardo/WaterLevel.Pro
 // Waterlevel.pro offers free server services with a sensor info update time of up to 120 seconds.
 const char* host_url = "https://api.waterlevel.pro/update";
 

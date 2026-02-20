@@ -16,6 +16,16 @@ Additionally, it integrates seamlessly with the [WiFi Smart Water Pump Controlle
 automatic control of a water pump based on the sensor's data. This integration enhances the system's 
 efficiency by automating water management processes.
 
+## Server Side (Full Reference)
+
+The complete server-side implementation is available at:
+[https://github.com/rrguardo/WaterLevel.Pro](https://github.com/rrguardo/WaterLevel.Pro)
+
+![WaterLevel.Pro app view](https://waterlevel.pro/static/prod_img/tab.png)
+
+Related features include real-time level updates, device linking and key management, historical tracking,
+alert-ready cloud endpoints, and web/mobile-friendly dashboards for monitoring and control.
+
 The project is open source and open hardware, licensed under GPLv3. All hardware, software, and
 3D printable components were designed from scratch by me, **Raul Rodriguez Guardo**, and are released 
 under the GPLv3 license, allowing for free use and modification.
@@ -61,15 +71,6 @@ For a detailed guide on how to build this project, check out the full tutorial a
 This devide use ESP32-C3 microcontroller can use Arduino IDE to flash/upload microcontroller code, using **ESP32C3 Dev Module** as board.
 
 [Download Latest Firmware Builds Here](WiFiWaterLevelS1/firmwares/)
-
-## Server Side Minimal Sample in Python
-
-Note [WaterLevel.Pro](https://waterlevel.pro/) offer a more advanced server side service free, 
-but you can make your own server using the sample provided as a minimal sample. 
-
-[Server sample that process and show sensor data](demo_server.py)
-
-Pending TODO: Improve the opensource Server Side Minimal Sample UI.
 
 
 
@@ -147,18 +148,16 @@ setup and functionality.
   * Electronics part: PCB, schematic.
   * Printable 3D Case
 * Firmware software
-* [Server sample that process and show sensor data](demo_server.py)
+* Full server-side reference: [WaterLevel.Pro](https://github.com/rrguardo/WaterLevel.Pro)
 
-The server side implementation at https://waterlevel.pro/ (cloud services) that use the device are not 
-included in this project or git repo and are not opensource.
+This repository focuses on hardware, firmware, and printable case assets. The complete server-side
+reference is maintained in its own repository.
 
 ---
 
 ## Next TODO:
 
 * Add basic DIY Guide
-* Improve the opensource server sample
-  * UI
 * ...
 
 ---
